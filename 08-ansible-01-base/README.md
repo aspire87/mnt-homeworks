@@ -3,22 +3,91 @@
 ## Подготовка к выполнению
 
 1. Установите Ansible версии 2.10 или выше.
+
+![](img/HW1_requiremetns_version.png)
 2. Создайте свой публичный репозиторий на GitHub с произвольным именем.
+
+Ссылка на свой [публичный репорзиторий](https://github.com/aspire87/mnt-homeworks)
+
 3. Скачайте [Playbook](./playbook/) из репозитория с домашним заданием и перенесите его в свой репозиторий.
+
+Репозиторий склонирован на ВМ с ansible
+
+![](img/HW1_requiremetns_clone%20repo.png)
 
 ## Основная часть
 
 1. Попробуйте запустить playbook на окружении из `test.yml`, зафиксируйте значение, которое имеет факт `some_fact` для указанного хоста при выполнении playbook.
+
+![](img/HW1_task1_1.png)
+
 2. Найдите файл с переменными (group_vars), в котором задаётся найденное в первом пункте значение, и поменяйте его на `all default fact`.
+
+Файл  с небоходимой  переменной лежит по  пути playbook/group_vars/all/examp.yaml
+
+Содержимое файла после редактирования
+
+```bash
+---
+  some_fact: "all default var"
+```
+
 3. Воспользуйтесь подготовленным (используется `docker`) или создайте собственное окружение для проведения дальнейших испытаний.
+
+Использовал  образы контейнеров  ubuntu и centos 7 для создания собственного окружения
+
+![](img/HW1_task1_environment.png)
+
 4. Проведите запуск playbook на окружении из `prod.yml`. Зафиксируйте полученные значения `some_fact` для каждого из `managed host`.
+
+![](img/HW1_task1_2.png)
+
+
 5. Добавьте факты в `group_vars` каждой из групп хостов так, чтобы для `some_fact` получились значения: для `deb` — `deb default fact`, для `el` — `el default fact`.
 6.  Повторите запуск playbook на окружении `prod.yml`. Убедитесь, что выдаются корректные значения для всех хостов.
+
+![](img/HW1_task1_3.png)
+
 7. При помощи `ansible-vault` зашифруйте факты в `group_vars/deb` и `group_vars/el` с паролем `netology`.
+
+![](img/HW1_task1_encrypt.png)
+
 8. Запустите playbook на окружении `prod.yml`. При запуске `ansible` должен запросить у вас пароль. Убедитесь в работоспособности.
+
+![](img/HW1_task1_ask_pass.png)
+
 9. Посмотрите при помощи `ansible-doc` список плагинов для подключения. Выберите подходящий для работы на `control node`.
+
+Т.к. планируется выполнение  на `control node`,  то  наиболее подходящим плагинм для подключения является плагин `local`
+
+![](img/HW1_task1_connection_plugin.png)
+
 10. В `prod.yml` добавьте новую группу хостов с именем  `local`, в ней разместите localhost с необходимым типом подключения.
+
+<details>
+  <summary>prod.yml</summary>
+
+```bash
+---
+  el:
+    hosts:
+      centos7:
+        ansible_connection: docker
+  deb:
+    hosts:
+      ubuntu:
+        ansible_connection: docker
+  local:
+    hosts:
+      localhost:
+        ansible_connection: local
+```
+</details>
+
 11. Запустите playbook на окружении `prod.yml`. При запуске `ansible` должен запросить у вас пароль. Убедитесь, что факты `some_fact` для каждого из хостов определены из верных `group_vars`.
+
+![](img/HW1_task1_localhost.png)
+
 12. Заполните `README.md` ответами на вопросы. Сделайте `git push` в ветку `master`. В ответе отправьте ссылку на ваш открытый репозиторий с изменённым `playbook` и заполненным `README.md`.
 13. Предоставьте скриншоты результатов запуска команд.
 
