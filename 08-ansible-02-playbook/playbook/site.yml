@@ -3,34 +3,74 @@
   hosts: clickhouse
   handlers:
     - name: Start clickhouse service
-      become: true
       ansible.builtin.service:
         name: clickhouse-server
         state: restarted
+
   tasks:
     - block:
-        - name: Get clickhouse distrib
+        - name: Clickhouse | Get clickhouse distrib
           ansible.builtin.get_url:
-            url: "https://packages.clickhouse.com/rpm/stable/{{ item }}-{{ clickhouse_version }}.noarch.rpm"
+            url: "https://packages.clickhouse.com/rpm/stable/{{ item }}-{{ clickhouse_version }}.x86_64.rpm"
             dest: "./{{ item }}-{{ clickhouse_version }}.rpm"
-          with_items: "{{ clickhouse_packages }}"
+          loop: "{{ clickhouse_packages }}"
       rescue:
-        - name: Get clickhouse distrib
+        - name: Clickhouse | Get clickhouse distrib
           ansible.builtin.get_url:
             url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
             dest: "./clickhouse-common-static-{{ clickhouse_version }}.rpm"
-    - name: Install clickhouse packages
-      become: true
+
+    - name: Clickhouse | Install clickhouse packages
       ansible.builtin.yum:
         name:
-          - clickhouse-common-static-{{ clickhouse_version }}.rpm
-          - clickhouse-client-{{ clickhouse_version }}.rpm
-          - clickhouse-server-{{ clickhouse_version }}.rpm
+          - ./clickhouse-common-static-{{ clickhouse_version }}.rpm
+          - ./clickhouse-client-{{ clickhouse_version }}.rpm
+          - ./clickhouse-server-{{ clickhouse_version }}.rpm
+        disablerepo: "*"
+        disable_gpg_check: true
       notify: Start clickhouse service
-    - name: Flush handlers
-      meta: flush_handlers
-    - name: Create database
+
+    - name: Clickhouse | Flush handlers
+      ansible.builtin.meta: flush_handlers
+
+    - name: Clickhouse | Create database
       ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
       register: create_db
       failed_when: create_db.rc != 0 and create_db.rc !=82
       changed_when: create_db.rc == 0
+
+- name: Install Vector
+  hosts: vector
+  handlers:
+    - name: Start Vector service
+      become: true
+      ansible.builtin.service:
+        name: vector
+        state: restarted
+  tasks:
+    - name: Vector | Create dir
+      ansible.builtin.file:
+        path: "{{ vector_home }}"
+        state: directory
+        mode: 0644
+      tags: vector
+    - name: Vector | Download packages
+      ansible.builtin.get_url:
+        url: "{{ vector_url }}"
+        dest: "{{ vector_home }}/vector-{{ vector_version }}.rpm"
+        validate_certs: false
+    - name: Vector | Install packages
+      ansible.builtin.yum:
+        name: "{{ vector_home }}/vector-{{ vector_version }}.rpm"
+        disable_gpg_check: true
+        disablerepo: "*"
+    - name: Apply vector template
+      become: true
+      ansible.builtin.template:
+        src: vector.yml.j2
+        dest: "{{ vector_config_dir }}/vector.yml"
+        mode: "0644"
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_gid }}"
+        validate: vector validate --no-environment --config-yaml %s
+      notify: Start Vector service
