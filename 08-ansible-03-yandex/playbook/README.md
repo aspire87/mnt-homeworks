@@ -2,9 +2,10 @@
 
 Decription
 
-Данный [playbook](site.yml) предназначен  для  установки `Clickhouse`  и `Vector` на хосты,  указанные в файле  `inventory`. Плейбук состоит из  двух play:
+Данный [playbook](site.yml) предназначен  для  установки `Clickhouse`  и `Vector` на хосты,  указанные в файле  `inventory`. Плейбук состоит из  трех play:
    * `Install Clickhouse` - устанавливает,  настраивает и запускает `clickhouse` на группе хостов `clickhouse`;
    * `Install Vector` -  устанавливает , настраивает и запускает `Vector`  на группе хостов `vector`
+   * `Install Lighthouse` - устанавливает, настраивает и запускает `lighthouse` на  группе хостов `lighthouse`
 
 
 
@@ -13,8 +14,7 @@ Play "Install Clickhouse":
  - Устанавливает пакеты clickhouse на группу хостов clickhouse
  - Запускает clickhouse-server
  - Создает БД logs для  хранения собираемых логов
- - Устанавливается vector на основе шаблонов
- - Запускается vector
+
 
 
 Play "Install Vector":
@@ -26,4 +26,4 @@ Play "Install Vector":
 Play "Install Lighthouse"
  - Предустанавливает необходимое ПО (git, nginx) для  последующей установки Lighthouse
  - Применяет конфиг  nginx
- - Клонирует репозиторий Ligthhouse и применяет конфиг
+ - Клонирует репозиторий Lighthouse и применяет конфиг `lighthouse`
