@@ -14,7 +14,7 @@ vector_config:
       inputs:
         - demo_logs
       database: logs
-      endpoint: http://{{ hostvars[ 'clickhouse.netology.cloud' ].ansible_default_ipv4.address }}:8123
+      endpoint: http://{{ hostvars[ 'clickhouse-01' ].ansible_default_ipv4.address }}:8123
       table: vector_table
       compression: gzip
       healthcheck: true

@@ -1,0 +1,19 @@
+---
+clickhouse:
+  hosts:
+    clickhouse-01:
+      ansible_user: aspire
+      ansible_host: 51.250.94.90
+      ansible_connection: ssh
+vector:
+  hosts:
+    vector-01:
+      ansible_user: aspire
+      ansible_host: 158.160.52.9
+      ansible_connection: ssh
+lighthouse:
+  hosts:
+    ligthhouse-01:
+      ansible_user: aspire
+      ansible_host: 158.160.121.8
+      ansible_connection: ssh
