@@ -1,111 +1,18 @@
 ---
-- name: Install Clickhouse
+- name: Install Clickhouse.
   hosts: clickhouse
   become: true
+  roles:
+    - clickhouse
 
-  handlers:
-    - name: Start clickhouse service
-      service:
-        name: clickhouse-server
-        state: restarted
-
-  tasks:
-    - name: Get clickhouse
-      get_url:
-        url: "https://packages.clickhouse.com/rpm/stable/{{ item }}-{{ clickhouse_version }}.x86_64.rpm"
-        dest: "/opt/{{ item }}-{{ clickhouse_version }}.rpm"
-      loop: "{{ clickhouse_packages }}"
-
-    - name: Install clickhouse packages
-      yum:
-        name: "/opt/{{ item }}-{{ clickhouse_version }}.rpm"
-        disable_gpg_check: true
-      loop: "{{ clickhouse_packages }}"
-      notify: Start clickhouse service
-
-    - name: Flush handlers
-      meta: flush_handlers
-
-    - name: Create database
-      command: "clickhouse-client -q 'create database logs;'"
-      register: create_db
-      failed_when: create_db.rc != 0 and create_db.rc !=82
-      changed_when: create_db.rc == 0
-
-- name: Install Vector
+- name: Install Vector.
   hosts: vector
   become: true
+  roles:
+    - vector
 
-  handlers:
-    - name: Start Vector service
-      service:
-        name: vector
-        state: restarted
-
-  tasks:
-    - name: Download vector packages
-      get_url:
-        url: "{{ vector_url }}"
-        dest: "/opt/vector-{{ vector_version }}-1.x86_64.rpm"
-
-    - name: Install vector
-      yum:
-        name: "/opt/vector-{{ vector_version }}-1.x86_64.rpm"
-        disable_gpg_check: true
-    - name: Apply conf template
-      template:
-        src: vector.yml.j2
-        dest: vector.yml
-        mode: "0644"
-        owner: "{{ ansible_user_id }}"
-        group: "{{ ansible_user_gid }}"
-        validate: vector validate --no-environment --config-yaml %s
-
-    - name: Change systemd unit
-      template:
-        src: vector.service.j2
-        dest: /usr/lib/systemd/system/vector.service
-        mode: "0644"
-        owner: "{{ ansible_user_id }}"
-        group: "{{ ansible_user_gid }}"
-        backup: true
-      notify: Start Vector service
-
-- name: Install lighthouse
+- name: Install Lighthouse.
   hosts: lighthouse
   become: true
-
-  handlers:
-    - name: Nginx reload
-      service:
-        name: nginx
-        state: restarted
-
-  pre_tasks:
-    - name: Install utils
-      yum:
-        name:
-          - nginx
-          - git
-        state: present
-        update_cache: yes
-
-    - name: Apply nginx config
-      template:
-        src: nginx.conf.j2
-        dest: /etc/nginx/nginx.conf
-        mode: 0644
-
-  tasks:
-    - name: Clone lighthouse repository
-      git:
-        repo: "{{ lighthouse_url }}"
-        dest: "{{ lighthouse_dir }}"
-        version: master
-
-    - name: Apply config
-      template:
-        src: lighthouse.conf.j2
-        dest: /etc/nginx/conf.d/lighthouse.conf
-        mode: 0644
-      notify: Nginx reload
+  roles:
+    - lighthouse
