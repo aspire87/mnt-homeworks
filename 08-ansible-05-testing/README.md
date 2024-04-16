@@ -525,8 +525,187 @@ WARNING  Skipping, '--destroy=never' requested.
   <summary>Повторный запуск</summary>
 
 ```bash
+[root@ansible01 vector-role]# molecule test --destroy=never
+WARNING  Driver docker does not provide a schema.
+INFO     default scenario test matrix: dependency, cleanup, destroy, syntax, create, prepare, converge, idempotence, side_effect, verify, cleanup, destroy
+INFO     Performing prerun with role_name_check=1...
+INFO     Running default > dependency
+WARNING  Skipping, missing the requirements file.
+WARNING  Skipping, missing the requirements file.
+INFO     Running default > cleanup
+WARNING  Skipping, cleanup playbook not configured.
+INFO     Running default > destroy
+WARNING  Skipping, '--destroy=never' requested.
+INFO     Running default > syntax
+INFO     Sanity checks: 'docker'
+
+playbook: /root/mnt-homeworks/08-ansible-04-role/playbook/roles/vector-role/molecule/default/converge.yml
+INFO     Running default > create
+WARNING  Skipping, instances already created.
+INFO     Running default > prepare
+WARNING  Skipping, prepare playbook not configured.
+INFO     Running default > converge
+
+PLAY [Converge] ****************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [oraclelinux]
+ok: [ubuntu]
+ok: [centos7]
+
+TASK [Include dir vector role] *************************************************
+
+TASK [vector-role : Get vector distrib rpm] ************************************
+skipping: [ubuntu]
+skipping: [oraclelinux]
+ok: [centos7]
+
+TASK [vector-role : Install vector rpm packages] *******************************
+skipping: [oraclelinux]
+skipping: [ubuntu]
+ok: [centos7]
+
+TASK [vector-role : Get vector distrib deb] ************************************
+skipping: [centos7]
+skipping: [oraclelinux]
+ok: [ubuntu]
+
+TASK [vector-role : Install vector deb packages] *******************************
+skipping: [centos7]
+skipping: [oraclelinux]
+ok: [ubuntu]
+
+TASK [vector-role : Get vector distrib rpm based for dnf packet manager] *******
+skipping: [centos7]
+skipping: [ubuntu]
+ok: [oraclelinux]
+
+TASK [vector-role : Install vector packages (dnf packet manager)] **************
+skipping: [centos7]
+skipping: [ubuntu]
+ok: [oraclelinux]
+
+TASK [vector-role : Generate vector config] ************************************
+ok: [centos7]
+ok: [ubuntu]
+ok: [oraclelinux]
+
+PLAY RECAP *********************************************************************
+centos7                    : ok=4    changed=0    unreachable=0    failed=0    skipped=4    rescued=0    ignored=0
+oraclelinux                : ok=4    changed=0    unreachable=0    failed=0    skipped=4    rescued=0    ignored=0
+ubuntu                     : ok=4    changed=0    unreachable=0    failed=0    skipped=4    rescued=0    ignored=0
+
+INFO     Running default > idempotence
+
+PLAY [Converge] ****************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [ubuntu]
+ok: [oraclelinux]
+ok: [centos7]
+
+TASK [Include dir vector role] *************************************************
+
+TASK [vector-role : Get vector distrib rpm] ************************************
+skipping: [oraclelinux]
+skipping: [ubuntu]
+ok: [centos7]
+
+TASK [vector-role : Install vector rpm packages] *******************************
+skipping: [ubuntu]
+skipping: [oraclelinux]
+ok: [centos7]
+
+TASK [vector-role : Get vector distrib deb] ************************************
+skipping: [centos7]
+skipping: [oraclelinux]
+ok: [ubuntu]
+
+TASK [vector-role : Install vector deb packages] *******************************
+skipping: [centos7]
+skipping: [oraclelinux]
+ok: [ubuntu]
+
+TASK [vector-role : Get vector distrib rpm based for dnf packet manager] *******
+skipping: [centos7]
+skipping: [ubuntu]
+ok: [oraclelinux]
+
+TASK [vector-role : Install vector packages (dnf packet manager)] **************
+skipping: [centos7]
+skipping: [ubuntu]
+ok: [oraclelinux]
+
+TASK [vector-role : Generate vector config] ************************************
+ok: [centos7]
+ok: [oraclelinux]
+ok: [ubuntu]
+
+PLAY RECAP *********************************************************************
+centos7                    : ok=4    changed=0    unreachable=0    failed=0    skipped=4    rescued=0    ignored=0
+oraclelinux                : ok=4    changed=0    unreachable=0    failed=0    skipped=4    rescued=0    ignored=0
+ubuntu                     : ok=4    changed=0    unreachable=0    failed=0    skipped=4    rescued=0    ignored=0
+
+INFO     Idempotence completed successfully.
+INFO     Running default > side_effect
+WARNING  Skipping, side effect playbook not configured.
+INFO     Running default > verify
+INFO     Running Ansible Verifier
+
+PLAY [Verify] ******************************************************************
+
+TASK [Get Vector version] ******************************************************
+changed: [oraclelinux]
+changed: [ubuntu]
+changed: [centos7]
+
+TASK [Read Vector config file] *************************************************
+ok: [centos7]
+ok: [oraclelinux]
+ok: [ubuntu]
+
+TASK [Check Version] ***********************************************************
+ok: [centos7] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [ubuntu] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [oraclelinux] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+TASK [Check endpoin in vector.yaml] ********************************************
+ok: [ubuntu] => {
+    "changed": false,
+    "msg": "its all ok"
+}
+ok: [centos7] => {
+    "changed": false,
+    "msg": "its all ok"
+}
+ok: [oraclelinux] => {
+    "changed": false,
+    "msg": "its all ok"
+}
+
+PLAY RECAP *********************************************************************
+centos7                    : ok=4    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+oraclelinux                : ok=4    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+ubuntu                     : ok=4    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+INFO     Verifier completed successfully.
+INFO     Running default > cleanup
+WARNING  Skipping, cleanup playbook not configured.
+INFO     Running default > destroy
+WARNING  Skipping, '--destroy=never' requested.
+
 ```
 </details>
+
 6. Добавьте новый тег на коммит с рабочим сценарием в соответствии с семантическим версионированием.
 
 [Vector-role v1.1.1](https://github.com/aspire87/vector-role/releases/tag/v1.1.1)
