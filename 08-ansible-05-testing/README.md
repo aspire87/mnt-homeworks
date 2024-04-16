@@ -272,6 +272,8 @@ ubuntu                     : ok=4    changed=0    unreachable=0    failed=0    s
       fail_msg: "nginxdb not found"
 ```
 </details>
+
+<details>
   <summary>Запуск с файлом verify.yml</summary>
 
 ```bash
@@ -514,9 +516,6 @@ INFO     Running default > destroy
 WARNING  Skipping, '--destroy=never' requested.
 ```
 <details>
-  <summary>molecule test with assert</summary>
-
-</details>
 
 
 
