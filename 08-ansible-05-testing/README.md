@@ -520,7 +520,16 @@ WARNING  Skipping, '--destroy=never' requested.
 
 
 5. Запустите тестирование роли повторно и проверьте, что оно прошло успешно.
+
+<details>
+  <summary>Повторный запуск</summary>
+
+```bash
+```
+</details>
 6. Добавьте новый тег на коммит с рабочим сценарием в соответствии с семантическим версионированием.
+
+[Vector-role v1.1.1](https://github.com/aspire87/vector-role/releases/tag/v1.1.1)
 
 ### Tox
 
