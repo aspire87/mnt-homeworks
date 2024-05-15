@@ -10,8 +10,7 @@ node("linux"){
             sh 'ansible-playbook site.yml -i inventory/prod.yml'
         }
         else{
-            echo 'need more action'
-        }
+            sh 'ansible-playbook site.yml -i inventory/prod.yml --check --diff'
         
     }
 }

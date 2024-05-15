@@ -1,0 +1,118 @@
+[0KRunning with gitlab-runner 16.11.1 (535ced5f)[0;m
+[0K  on runner ynDBno3w6, system ID: s_ae4fbc9eb146[0;m
+section_start:1715780052:prepare_executor
+[0K[0K[36;1mPreparing the "docker" executor[0;m[0;m
+[0KUsing Docker executor with image docker:26 ...[0;m
+[0KPulling docker image docker:26 ...[0;m
+[0KUsing docker image sha256:1feaad25659a469625941125ebe98d4f169f882ff8f39975001662daa5ed43fa for docker:26 with digest docker@sha256:c890c327e515cdccd14e593fb5450e4375e791ab0520795948134cb87b45aaa7 ...[0;m
+section_end:1715780055:prepare_executor
+[0Ksection_start:1715780055:prepare_script
+[0K[0K[36;1mPreparing environment[0;m[0;m
+Running on runner-yndbno3w6-project-1-concurrent-0 via runner...
+section_end:1715780056:prepare_script
+[0Ksection_start:1715780056:get_sources
+[0K[0K[36;1mGetting source from Git repository[0;m[0;m
+[32;1mFetching changes with git depth set to 20...[0;m
+Reinitialized existing Git repository in /builds/root/app/.git/
+[32;1mChecking out 9edff8b2 as detached HEAD (ref is main)...[0;m
+
+[32;1mSkipping Git submodules setup[0;m
+section_end:1715780057:get_sources
+[0Ksection_start:1715780057:step_script
+[0K[0K[36;1mExecuting "step_script" stage of the job script[0;m[0;m
+[0KUsing docker image sha256:1feaad25659a469625941125ebe98d4f169f882ff8f39975001662daa5ed43fa for docker:26 with digest docker@sha256:c890c327e515cdccd14e593fb5450e4375e791ab0520795948134cb87b45aaa7 ...[0;m
+[32;1m$ cat $CI_REGISTRY_KEY | docker login --username json_key --password-stdin cr.yandex[0;m
+Login Succeeded
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+[32;1m$ docker build -t $IMAGE_BUILD .[0;m
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.04kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/centos:7
+#2 DONE 0.5s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [stage-1 1/9] FROM docker.io/library/centos:7@sha256:be65f488b7764ad3638f236b7b515b3678369a5124c47b8d32916d6487418ea4
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 70B done
+#5 DONE 0.0s
+
+#6 [stage-1 6/9] WORKDIR /python_api
+#6 CACHED
+
+#7 [builder 3/4] WORKDIR /Python-3.9.18
+#7 CACHED
+
+#8 [stage-1 3/9] COPY --from=builder /usr/local/lib/python3.9/ /usr/local/lib/python3.9/
+#8 CACHED
+
+#9 [stage-1 4/9] COPY --from=builder /usr/local/bin/python3.9 /usr/local/bin/python3.9
+#9 CACHED
+
+#10 [builder 2/4] RUN yum install gcc openssl-devel bzip2-devel libffi libffi-devel wget make -y &&     wget https://www.python.org/ftp/python/3.9.18/Python-3.9.18.tgz  &&     tar -xzf Python-3.9.18.tgz &&      rm Python-3.9.18.tgz &&     yum clean all &&      rm -rf /var/cache/yum/*
+#10 CACHED
+
+#11 [stage-1 2/9] COPY --from=builder /usr/local/include/python3.9/ /usr/local/include/python3.9/
+#11 CACHED
+
+#12 [builder 4/4] RUN ./configure --enable-optimizations &&     make altinstall &&     cd ../ && rm -rf /Python-3.9.18
+#12 CACHED
+
+#13 [stage-1 7/9] COPY --chown=app requirements.txt requirements.txt
+#13 CACHED
+
+#14 [stage-1 5/9] RUN groupadd --gid 1001 --system app &&      adduser --uid 1001 --gid app --create-home --system app
+#14 CACHED
+
+#15 [stage-1 8/9] RUN python3.9 -m pip install -r requirements.txt
+#15 CACHED
+
+#16 [stage-1 9/9] COPY --chown=app python-api.py python-api.py
+#16 CACHED
+
+#17 exporting to image
+#17 exporting layers done
+#17 writing image sha256:aa3b5fcf67b9b18deedfd004de6bbdb0f04c6ff2d060b6c09aa8fa159cce274d 0.0s done
+#17 naming to cr.yandex/crph90170avir08hegjc/app/hello:gitlab-9edff8b2 0.0s done
+#17 DONE 0.1s
+[32;1m$ docker push $IMAGE_BUILD[0;m
+The push refers to repository [cr.yandex/crph90170avir08hegjc/app/hello]
+6287e48b10ec: Preparing
+36afd30cd9f3: Preparing
+1421f5e297a8: Preparing
+c4d722b69f5f: Preparing
+0b06d44d3a12: Preparing
+460a26973034: Preparing
+fbc3f3ee2076: Preparing
+1479ca8abb90: Preparing
+174f56854903: Preparing
+460a26973034: Waiting
+fbc3f3ee2076: Waiting
+1479ca8abb90: Waiting
+174f56854903: Waiting
+c4d722b69f5f: Pushed
+1421f5e297a8: Pushed
+6287e48b10ec: Pushed
+0b06d44d3a12: Pushed
+1479ca8abb90: Pushed
+460a26973034: Pushed
+36afd30cd9f3: Pushed
+174f56854903: Pushed
+fbc3f3ee2076: Pushed
+gitlab-9edff8b2: digest: sha256:7f9d0cb80adeec77791f63702ca7d8c4c10e08c067b9c1883e438a0f7990c743 size: 2202
+section_end:1715780245:step_script
+[0Ksection_start:1715780245:cleanup_file_variables
+[0K[0K[36;1mCleaning up project directory and file based variables[0;m[0;m
+section_end:1715780246:cleanup_file_variables
+[0K[32;1mJob succeeded[0;m
