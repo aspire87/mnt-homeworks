@@ -39,9 +39,30 @@
 Создайте Dashboard и в ней создайте Panels:
 
 - утилизация CPU для nodeexporter (в процентах, 100-idle);
+
+```bash
+100 - (avg (irate(node_cpu_seconds_total{mode="idle"}[5m]) * 100))
+```
+
 - CPULA 1/5/15;
+
+```bash
+node_load1{job="nodeexporter"}
+node_load5{job="nodeexporter"}
+node_load15{job="nodeexporter"}
+```
+
 - количество свободной оперативной памяти;
+
+```bash
+node_memory_MemFree_bytes{job="nodeexporter"}
+```
+
 - количество места на файловой системе.
+
+```bash
+node_filesystem_avail_bytes{device="/dev/mapper/centos-root", fstype="xfs", instance="nodeexporter:9100", job="nodeexporter", mountpoint="/"}
+```
 
 Для решения этого задания приведите promql-запросы для выдачи этих метрик, а также скриншот получившейся Dashboard.
 
